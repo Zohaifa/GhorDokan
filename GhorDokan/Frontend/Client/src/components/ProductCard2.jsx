@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import productImage from '../assets/product.png';
+import productImage from '../assets/product2.jpg';
 
-const ProductCard = () => {
+const ProductCard2 = () => {
   const [quantity, setQuantity] = useState(0);
 
   const handleDecrease = () => setQuantity((prev) => Math.max(0, prev - 1));
@@ -25,8 +25,8 @@ const ProductCard = () => {
 
       {/* Product Details */}
       <div className="mt-3 flex-grow px-1">
-        <h3 className="text-lg font-bold text-[#0a2351]">Honey</h3>
-        <p className="mt-0.5 text-xs text-gray-500 line-clamp-1">100% natural organic honey</p>
+        <h3 className="text-lg font-bold text-[#0a2351]">Ata</h3>
+        <p className="mt-0.5 text-xs text-gray-500 line-clamp-1">Teer Ata 1 kg</p>
         
         <div>
             <div className="flex items-center justify-between">
@@ -76,4 +76,4 @@ const ProductCard = () => {
   );
 };
 
-export default ProductCard;
+export default ProductCard2;

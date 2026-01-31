@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import BackButton from "../components/BackButton";
 import ProductCard from "../components/ProductCard";
+import ProductCard2 from "../components/ProductCard2";
 
 const AllProducts = () => {
   const [filterCategory, setFilterCategory] = useState("");
@@ -66,7 +67,7 @@ const AllProducts = () => {
                 id="filter"
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
+                className="w-full bg-white rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
               >
                 <option value="">All Categories</option>
                 <option value="honey">Honey</option>
@@ -130,7 +131,7 @@ const AllProducts = () => {
                 id="sort"
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
+                className="w-full bg-white rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
               >
                 <option value="">Default</option>
                 <option value="most-rated">Most Rated</option>
@@ -192,8 +193,11 @@ const AllProducts = () => {
 
           {/* Products Grid */}
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {Array.from({ length: 20 }).map((_, index) => (
+            {Array.from({ length: 10 }).map((_, index) => (
               <ProductCard key={index} />
+            ))}
+            {Array.from({ length: 10 }).map((_, index) => (
+              <ProductCard2 key={index} />
             ))}
           </div>
         </div>
