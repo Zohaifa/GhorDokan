@@ -29,15 +29,7 @@ const ProductCard = () => {
        On desktop: 4 cards in view
     */
     <div
-      className="group relative flex w-[calc(100%-2rem)] min-w-[240px] flex-shrink-0 cursor-pointer flex-col rounded-[20px] border border-gray-100 bg-white p-3 shadow-md transition duration-300 ease-out hover:-translate-y-1 hover:shadow-xl sm:w-[48%] sm:min-w-[260px] lg:w-[22%] lg:min-w-[265px] overflow-visible"
-      onClick={handleNavigate}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          handleNavigate();
-        }
-      }}
-      role="button"
-      tabIndex={0}
+      className="group relative flex w-[calc(100%-2rem)] min-w-[240px] flex-shrink-0 flex-col rounded-[20px] border border-gray-100 bg-white p-3 shadow-md transition duration-300 ease-out hover:shadow-xl sm:w-[48%] sm:min-w-[260px] lg:w-[22%] lg:min-w-[265px] overflow-visible"
     >
       <div className="absolute right-3 top-3 z-20 flex translate-y-1 flex-col items-center gap-2 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
         <button
@@ -72,7 +64,10 @@ const ProductCard = () => {
       </div>
       
       {/* Image Container */}
-      <div className="flex justify-center rounded-xl bg-[#f8f8f8] py-4 transition duration-300 group-hover:scale-[1.02]">
+      <div 
+        className="flex justify-center rounded-xl bg-[#f8f8f8] py-4 transition duration-300 group-hover:scale-[1.02] cursor-pointer"
+        onClick={handleNavigate}
+      >
         <img 
           src={productImage} 
           alt="Honey" 

@@ -23,7 +23,7 @@ const ProductDetails = ({ isAuthenticated, user, toggleAuth }) => {
         description: '100% natural organic honey harvested from local farms. Smooth, rich, and full of nutrients.',
         category: 'Honey',
         stock: 18,
-        rating: 4.8,
+        rating: 4.5,
         image: productImage,
       },
       {
@@ -32,8 +32,8 @@ const ProductDetails = ({ isAuthenticated, user, toggleAuth }) => {
         price: '100 BDT',
         description: 'Teer Ata 1 kg - premium quality wheat flour for daily cooking and baking.',
         category: 'Grocery',
-        stock: 42,
-        rating: 4.5,
+        stock: 0,
+        rating: 3,
         image: productImage2,
       },
     ],
@@ -146,8 +146,10 @@ const ProductDetails = ({ isAuthenticated, user, toggleAuth }) => {
                 <p className="text-lg font-semibold text-amber-600">{product.price}</p>
               </div>
               <div>
-                <p className="text-xs uppercase text-gray-400">In stock</p>
-                <p className="text-base font-semibold">{product.stock} items</p>
+                <p className="text-xs uppercase text-gray-400">Availability</p>
+                <p className={`text-base font-semibold ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                </p>
               </div>
               <div>
                 <p className="text-xs uppercase text-gray-400">Rating</p>
