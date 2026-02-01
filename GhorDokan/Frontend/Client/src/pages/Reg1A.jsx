@@ -70,14 +70,7 @@ const Reg1A = () => {
 
       <main className="flex-grow px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-2xl">
-          <button
-            type="button"
-            onClick={() => navigate('/signin')}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50"
-          >
-            <span aria-hidden="true">←</span>
-            <span>Back to Sign In page</span>
-          </button>
+          <BackButton to="/signin" label="Back" />
 
           <div className="mt-6 rounded-lg bg-white p-8 shadow-md">
             <div className="flex items-center justify-between mb-6">

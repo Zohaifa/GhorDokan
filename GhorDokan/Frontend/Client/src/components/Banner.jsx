@@ -24,7 +24,7 @@ const Banner = () => {
   };
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 sm:px-6">
+    <section className="mx-auto w-full max-w-7xl px-4 sm:px-4">
       <div className="relative overflow-hidden rounded-2xl shadow">
         <div
           className="flex transition-transform duration-500 ease-out"
@@ -35,7 +35,7 @@ const Banner = () => {
               <img
                 src={banner}
                 alt={`Banner ${index + 1}`}
-                className="h-[220px] w-full object-cover sm:h-[320px] lg:h-[400px]"
+                className="h-[220px] w-full object-cover sm:h-[280px] lg:h-[300px]"
               />
             </div>
           ))}

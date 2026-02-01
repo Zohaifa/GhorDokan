@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Route, Router, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
@@ -12,6 +12,7 @@ import Checkout from './pages/Checkout';
 import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import Favorites from './pages/Favorites';
+import ProductDetails from './pages/ProductDetails';
 
 const App = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -39,6 +40,7 @@ const App = () => {
 			<Route path="/signin" element={<SignIn />} />
 			<Route path="/registration" element={<Registration />} />
 			<Route path="/products" element={<AllProducts isAuthenticated={isAuthenticated} user={user} toggleAuth={toggleAuth} />} />
+			<Route path="/product/:id" element={<ProductDetails isAuthenticated={isAuthenticated} user={user} toggleAuth={toggleAuth} />} />
 			<Route path="/reg1a" element={<Reg1A />} />
 			<Route path="/cart" element={<Cart isAuthenticated={isAuthenticated} user={user} toggleAuth={toggleAuth} />} />
 			<Route path="/checkout" element={<Checkout isAuthenticated={isAuthenticated} user={user} toggleAuth={toggleAuth} />} />
