@@ -19,10 +19,6 @@ const CreateProduct = ({ userRole }) => {
   const [productCategory, setProductCategory] = useState('');
   const [productStock, setProductStock] = useState('');
 
-  // Category form state
-  const [categoryName, setCategoryName] = useState('');
-  const [deleteCategoryId, setDeleteCategoryId] = useState('');
-
   useEffect(() => {
     // Fetch categories
     const fetchCategories = async () => {
@@ -330,67 +326,16 @@ const CreateProduct = ({ userRole }) => {
               {loading ? 'Uploading...' : 'Upload Product'}
             </button>
           </form>
-        </div>
 
-        {/* Category Section */}
-        <div className="mb-12 rounded-lg border border-gray-200 bg-white p-8 shadow">
-          <h2 className="text-2xl font-bold text-gray-900">Manage Categories</h2>
-          <div className="mt-2 mb-6 h-1 w-20 rounded-full bg-amber-600" />
-
-          <form onSubmit={handleCategorySubmit} className="space-y-6 mb-8">
-            <div>
-              <label htmlFor="categoryName" className="block text-sm font-medium text-gray-700">
-                New Category Name
-              </label>
-              <input
-                type="text"
-                id="categoryName"
-                value={categoryName}
-                onChange={(e) => setCategoryName(e.target.value)}
-                placeholder="Category name"
-                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-lg bg-green-600 px-6 py-3 font-semibold text-white transition hover:bg-green-700 disabled:opacity-50 sm:w-auto"
+          <div className="mt-8 pt-8 border-t border-gray-200">
+            <Link
+              to="/categories/create"
+              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition hover:bg-blue-700"
             >
-              {loading ? 'Creating...' : 'Add Category'}
-            </button>
-          </form>
-
-          <form onSubmit={handleDeleteCategory} className="space-y-6">
-            <div>
-              <label htmlFor="deleteCategorySelect" className="block text-sm font-medium text-gray-700">
-                Delete Category
-              </label>
-              <select
-                id="deleteCategorySelect"
-                value={deleteCategoryId}
-                onChange={(e) => setDeleteCategoryId(e.target.value)}
-                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
-                required
-              >
-                <option value="">Select category</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-lg bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-700 disabled:opacity-50 sm:w-auto"
-            >
-              {loading ? 'Deleting...' : 'Delete Category'}
-            </button>
-          </form>
+              <span>Manage Categories</span>
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
       </main>
     </div>
