@@ -14,14 +14,19 @@ const SignIn = () => {
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      console.error('Sign in error', error);
-      toast.error(error.message || 'Sign in failed');
-      return;
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        console.error('Sign in error:', error);
+        toast.error(error.message || 'Sign in failed');
+        return;
+      }
+      toast.success('Signed in successfully');
+      navigate('/');
+    } catch (err) {
+      console.error('Unexpected sign in error:', err);
+      toast.error('An unexpected error occurred');
     }
-    toast.success('Signed in successfully');
-    navigate('/');
   };
 
   const handleGoogleSignIn = () => {

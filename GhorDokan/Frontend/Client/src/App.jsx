@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import Favorites from './pages/Favorites';
 import ProductDetails from './pages/ProductDetails';
+import DebugSupabase from './pages/DebugSupabase';
 import { supabase } from './lib/supabaseClient'
 
 const App = () => {
@@ -77,6 +78,7 @@ const App = () => {
 			<Route path="/dashboard" element={<Dashboard isAuthenticated={isAuthenticated} user={user} toggleAuth={toggleAuth} />} />
 			<Route path="/orders" element={<Orders isAuthenticated={isAuthenticated} user={user} toggleAuth={toggleAuth} />} />
 			<Route path="/favorites" element={<Favorites isAuthenticated={isAuthenticated} user={user} toggleAuth={toggleAuth} />} />
+			<Route path="/debug" element={<DebugSupabase />} />
 		</Routes>
 		</>
 	);

@@ -24,43 +24,31 @@ const Registration = () => {
       return;
     }
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          firstName,
-          lastName,
-          phone,
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            firstName,
+            lastName,
+            phone,
+          },
         },
-      },
-    });
+      });
 
-    if (error) {
-      console.error('Registration error', error);
-      toast.error(error.message || 'Registration failed');
-      return;
-    }
-
-    // Create profile entry in public.profiles table
-    if (data.user) {
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: data.user.id,
-          name: `${firstName} ${lastName}`,
-          phone_num: phone,
-          role: 'user',
-        });
-
-      if (profileError) {
-        console.error('Profile creation error', profileError);
-        // Don't fail the signup if profile creation fails, it might be created by trigger
+      if (error) {
+        console.error('Registration error', error);
+        toast.error(error.message || 'Registration failed');
+        return;
       }
-    }
 
-    toast.success('Registration successful — please check your email to confirm');
-    navigate('/signin');
+      toast.success('Registration successful — please check your email to confirm');
+      navigate('/signin');
+    } catch (err) {
+      console.error('Unexpected error during registration:', err);
+      toast.error('An unexpected error occurred. Please try again.');
+    }
   };
 
   return (
