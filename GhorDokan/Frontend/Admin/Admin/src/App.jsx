@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from './lib/supabaseClient';
+import AdminLogin from './pages/AdminLogin';
 import Home from './pages/Home';
 import Orders from './pages/Orders';
 import Order from './pages/Order';
@@ -71,19 +72,12 @@ const App = () => {
 		);
 	}
 
-	// Protect admin routes - only allow if user is admin
-	const AdminRoute = ({ element }) => {
-		if (!user) return <Navigate to="/" />;
-		if (userRole !== 'admin') {
-			return (
-				<div className="flex items-center justify-center min-h-screen bg-gray-50">
-					<p className="text-red-600 font-semibold">Access denied. Admin role required.</p>
-				</div>
-			);
-		}
-		return element;
-	};
+	// If not authenticated or not admin, show login page
+	if (!user || userRole !== 'admin') {
+		return <AdminLogin />;
+	}
 
+	// Protect all routes - user is authenticated and is admin
 	return (
 		<Router>
 			<Routes>
@@ -92,10 +86,7 @@ const App = () => {
 				<Route path="/orders/:id" element={<Order user={user} userRole={userRole} />} />
 				<Route path="/customers" element={<Customers user={user} userRole={userRole} />} />
 				<Route path="/products" element={<Products user={user} userRole={userRole} />} />
-				<Route 
-					path="/products/create" 
-					element={<AdminRoute element={<CreateProduct user={user} userRole={userRole} />} />} 
-				/>
+				<Route path="/products/create" element={<CreateProduct user={user} userRole={userRole} />} />
 			</Routes>
 		</Router>
 	);
