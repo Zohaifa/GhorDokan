@@ -3,7 +3,9 @@
 
 id (uuid, PK): Matches auth.users(id).
 
-name (text): User's display name.
+first_name text
+
+last_name text
 
 phone_num (text): User's phone number.
 
