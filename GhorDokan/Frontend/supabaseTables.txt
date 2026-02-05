@@ -1,0 +1,114 @@
+# User & Profiles
+## public.profiles: Extends the default auth.users.
+
+id (uuid, PK): Matches auth.users(id).
+
+name (text): User's display name.
+
+phone_num (text): User's phone number.
+
+role (text): 'user' or 'admin'.
+
+# Product Catalog
+## public.categories
+
+id (uuid, PK)
+
+name (text)
+
+public.products
+
+id (uuid, PK)
+
+name (text)
+
+description (text)
+
+price (numeric)
+
+stock (int)
+
+is_active (boolean)
+
+## public.product_images
+
+id (uuid, PK)
+
+product_id (uuid, FK to products)
+
+image_url (text): The full Supabase Storage URL.
+
+is_primary (boolean)
+
+sort_order (int)
+
+## public.product_categories (Junction Table)
+
+product_id (uuid, FK)
+
+category_id (uuid, FK)
+
+# Shopping Cart
+## public.carts
+
+id (uuid, PK)
+
+user_id (uuid, FK to auth.users): Note: This handles both registered users and anonymous users (via Supabase Anonymous Auth).
+
+# public.cart_items
+
+id (uuid, PK)
+
+cart_id (uuid, FK to carts)
+
+product_id (uuid, FK to products)
+
+quantity (int)
+
+# Orders & Checkout
+## public.addresses (Saved addresses for registered users)
+
+id (uuid, PK)
+
+user_id (uuid, FK)
+
+address_line_1 (text), address_line_2 (text), city (text), phone_num (text)
+
+## public.orders
+
+id (uuid, PK)
+
+user_id (uuid, FK, Nullable): The user who made the order.
+
+order_number (text, Unique)
+
+status (text): e.g., 'placed', 'shipped'.
+
+total_amount (numeric)
+
+payment_method (text): default 'COD'.
+
+recipient_name (text): Snapshot of name at checkout.
+
+recipient_phone (text): Snapshot of phone at checkout.
+
+shipping_address (jsonb): Snapshot of full address object.
+
+is_guest_checkout (boolean)
+
+## public.order_items
+
+id (uuid, PK)
+
+order_id (uuid, FK to orders)
+
+product_id (uuid, FK to products, Nullable)
+
+product_name (text): Snapshot.
+
+price_at_purchase (numeric): Snapshot.
+
+quantity (int)
+
+#  Storage
+Bucket Name: 'product-images' (Public)

@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import BackButton from '../components/BackButton';
+import { supabase } from '../lib/supabaseClient';
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -10,10 +12,16 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [showRegisterOptions, setShowRegisterOptions] = useState(false);
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    // Sign In functionality will be implemented later
-    console.log('Sign In attempt with:', { email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      console.error('Sign in error', error);
+      toast.error(error.message || 'Sign in failed');
+      return;
+    }
+    toast.success('Signed in successfully');
+    navigate('/');
   };
 
   const handleGoogleSignIn = () => {

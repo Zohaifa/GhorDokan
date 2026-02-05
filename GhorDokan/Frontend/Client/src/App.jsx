@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ScrollToTop from './components/ScrollToTop';
@@ -13,21 +13,51 @@ import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import Favorites from './pages/Favorites';
 import ProductDetails from './pages/ProductDetails';
+import { supabase } from './lib/supabaseClient'
 
 const App = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [user, setUser] = useState(null);
 
-	const toggleAuth = () => {
+	useEffect(() => {
+		let mounted = true;
+
+		const getSession = async () => {
+			const { data } = await supabase.auth.getSession();
+			if (!mounted) return;
+			if (data?.session) {
+				setIsAuthenticated(true);
+				setUser(data.session.user);
+			} else {
+				setIsAuthenticated(false);
+				setUser(null);
+			}
+		};
+
+		getSession();
+
+		const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+			if (session?.user) {
+				setIsAuthenticated(true);
+				setUser(session.user);
+			} else {
+				setIsAuthenticated(false);
+				setUser(null);
+			}
+		});
+
+		return () => {
+			mounted = false;
+			listener?.subscription?.unsubscribe?.();
+		};
+	}, []);
+
+	const toggleAuth = async () => {
 		if (isAuthenticated) {
+			await supabase.auth.signOut();
 			setIsAuthenticated(false);
 			setUser(null);
 			toast.info('Logged out successfully');
-		} else {
-			const dummyUser = { name: 'Ahmed Khan', email: 'ahmed@example.com' };
-			setUser(dummyUser);
-			setIsAuthenticated(true);
-			toast.success(`Welcome, ${dummyUser.name}!`);
 		}
 	};
 

@@ -20,20 +20,11 @@ const Reg1A = () => {
   );
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [area, setArea] = useState('Default');
-  const [apartment, setApartment] = useState('');
-  const [flat, setFlat] = useState('');
   const [showMethodSelector, setShowMethodSelector] = useState(false);
 
   const handleComplete = (e) => {
     e.preventDefault();
     
-    // Validate that if area is "Yes", apartment and flat are filled
-    if (area === 'Yes' && (!apartment || !flat)) {
-      toast.error('Please complete all required fields');
-      return;
-    }
-
     // Show success notification and redirect
     toast.success('You have successfully signed up! Welcome to GhorDokan!');
     setTimeout(() => {
@@ -230,56 +221,6 @@ const Reg1A = () => {
                 </div>
               )}
 
-              <div>
-                <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-2">
-                  Are you a resident of Nayarhat?
-                </label>
-                <select
-                  id="area"
-                  value={area}
-                  onChange={(e) => setArea(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
-                >
-                  <option value="No">No (default)</option>
-                  <option value="Yes">Yes, I am a resident of Nayarhat</option>
-                </select>
-              </div>
-
-              {area === 'Yes' && (
-                <div className="space-y-6">
-                  <div>
-                    <label htmlFor="apartment" className="block text-sm font-medium text-gray-700">
-                      Apartment Name
-                    </label>
-                    <select
-                      id="apartment"
-                      value={apartment}
-                      onChange={(e) => setApartment(e.target.value)}
-                      className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
-                      required
-                    >
-                      <option value="">Select apartment</option>
-                      <option value="Eden Village">Eden Village</option>
-                      <option value="Nilima">Nilima</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="flat" className="block text-sm font-medium text-gray-700">
-                      Flat
-                    </label>
-                    <input
-                      type="text"
-                      id="flat"
-                      value={flat}
-                      onChange={(e) => setFlat(e.target.value)}
-                      placeholder="Flat number"
-                      className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
 
               <button
                 type="submit"
@@ -303,7 +244,6 @@ const Reg1A = () => {
               </p>
             </div>
           </div>
-          <p className='text-sm text-amber-600 mt-4'>*If you are living in <b className='font-semibold'> Eden Village</b> or <b className='font-semibold'>Nilima</b>, please select Yes. <br /> Otherwise, ignore the drop down and continue.</p>
         </div>
       </main>
 

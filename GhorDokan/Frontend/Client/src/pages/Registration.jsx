@@ -1,34 +1,66 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import BackButton from '../components/BackButton';
+import { supabase } from '../lib/supabaseClient';
 
 
 
 const Registration = () => {
-  const [area, setArea] = useState('No');
-  const [addressLine1, setAddressLine1] = useState('');
-  const [addressLine2, setAddressLine2] = useState('');
-  const [roadNo, setRoadNo] = useState('');
-  const [houseNo, setHouseNo] = useState('');
-  const isResident = area === 'Yes';
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleAreaChange = (event) => {
-    const value = event.target.value;
-    setArea(value);
-    
-    // Clear address fields when "Yes" is selected
-    if (value === 'Yes') {
-      setAddressLine1('');
-      setAddressLine2('');
-      setRoadNo('');
-      setHouseNo('');
-    }
-  };
-
-  const handleRegister = (event) => {
+  const handleRegister = async (event) => {
     event.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          firstName,
+          lastName,
+          phone,
+        },
+      },
+    });
+
+    if (error) {
+      console.error('Registration error', error);
+      toast.error(error.message || 'Registration failed');
+      return;
+    }
+
+    // Create profile entry in public.profiles table
+    if (data.user) {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: data.user.id,
+          name: `${firstName} ${lastName}`,
+          phone_num: phone,
+          role: 'user',
+        });
+
+      if (profileError) {
+        console.error('Profile creation error', profileError);
+        // Don't fail the signup if profile creation fails, it might be created by trigger
+      }
+    }
+
+    toast.success('Registration successful — please check your email to confirm');
+    navigate('/signin');
   };
 
   return (
@@ -54,6 +86,8 @@ const Registration = () => {
                     id="firstName"
                     name="firstName"
                     placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                     className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
                     required
                   />
@@ -67,6 +101,8 @@ const Registration = () => {
                     id="lastName"
                     name="lastName"
                     placeholder="Last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                     className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
                     required
                   />
@@ -83,6 +119,8 @@ const Registration = () => {
                     id="email"
                     name="email"
                     placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
                     required
                   />
@@ -96,6 +134,8 @@ const Registration = () => {
                     id="phone"
                     name="phone"
                     placeholder="01XXXXXXXXX"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
                     required
                   />
@@ -103,125 +143,35 @@ const Registration = () => {
               </div>
 
               <div>
-                <label htmlFor="area" className="block text-sm font-medium text-gray-700">
-                  Are you a resident of Nayarhat, Oxygen?
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  Password
                 </label>
-                <select
-                  id="area"
-                  name="area"
-                  value={area}
-                  onChange={handleAreaChange}
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Choose a password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
                   required
-                >
-                  <option value="Yes">Yes, Im a resident of Nayarhat</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="addressLine1" className="block text-sm font-medium text-gray-700">
-                  Address Line 1
-                </label>
-                <input
-                  type="text"
-                  id="addressLine1"
-                  name="addressLine1"
-                  placeholder="Street, block, etc."
-                  value={addressLine1}
-                  onChange={(e) => setAddressLine1(e.target.value)}
-                  className={`mt-2 w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600 ${
-                    isResident ? 'bg-gray-100 border-gray-200 text-gray-500 cursor-not-allowed' : 'border-gray-300'
-                  }`}
-                  required={!isResident}
-                  disabled={isResident}
                 />
               </div>
 
               <div>
-                <label htmlFor="addressLine2" className="block text-sm font-medium text-gray-700">
-                  Address Line 2 (optional)
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                  Confirm Password
                 </label>
                 <input
-                  type="text"
-                  id="addressLine2"
-                  name="addressLine2"
-                  placeholder="Optional"
-                  value={addressLine2}
-                  onChange={(e) => setAddressLine2(e.target.value)}
-                  className={`mt-2 w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600 ${
-                    isResident ? 'bg-gray-100 border-gray-200 text-gray-500 cursor-not-allowed' : 'border-gray-300'
-                  }`}
-                  disabled={isResident}
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="Confirm password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  required
                 />
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="roadNo" className="block text-sm font-medium text-gray-700">
-                    Road No.
-                  </label>
-                  <input
-                    type="text"
-                    id="roadNo"
-                    name="roadNo"
-                    placeholder="Road number"
-                    value={roadNo}
-                    onChange={(e) => setRoadNo(e.target.value)}
-                    className={`mt-2 w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600 ${
-                      isResident ? 'bg-gray-100 border-gray-200 text-gray-500 cursor-not-allowed' : 'border-gray-300'
-                    }`}
-                    required={!isResident}
-                    disabled={isResident}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="houseNo" className="block text-sm font-medium text-gray-700">
-                    House No.
-                  </label>
-                  <input
-                    type="text"
-                    id="houseNo"
-                    name="houseNo"
-                    placeholder="House number"
-                    value={houseNo}
-                    onChange={(e) => setHouseNo(e.target.value)}
-                    className={`mt-2 w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600 ${
-                      isResident ? 'bg-gray-100 border-gray-200 text-gray-500 cursor-not-allowed' : 'border-gray-300'
-                    }`}
-                    required={!isResident}
-                    disabled={isResident}
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="apartment" className="block text-sm font-medium text-gray-700">
-                    Apartment Name
-                  </label>
-                  <input
-                    type="text"
-                    id="apartment"
-                    name="apartment"
-                    placeholder="Apartment name"
-                    className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="flat" className="block text-sm font-medium text-gray-700">
-                    Flat No
-                  </label>
-                  <input
-                    type="text"
-                    id="flat"
-                    name="flat"
-                    placeholder="Flat number"
-                    className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
-                    required
-                  />
-                </div>
               </div>
 
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
