@@ -9,53 +9,26 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+ const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      // Sign in with email and password
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+  try {
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
-      if (authError) {
-        toast.error(authError.message || 'Login failed');
-        setLoading(false);
-        return;
-      }
-
-      // Check if user has admin role
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', authData.user.id)
-        .single();
-
-      if (profileError) {
-        toast.error('Could not verify user role');
-        await supabase.auth.signOut();
-        setLoading(false);
-        return;
-      }
-
-      if (profile?.role !== 'admin') {
-        toast.error('Access denied. Admin role required.');
-        await supabase.auth.signOut();
-        setLoading(false);
-        return;
-      }
-
-      toast.success('Login successful!');
-      navigate('/');
-    } catch (err) {
-      console.error('Unexpected error:', err);
-      toast.error('An unexpected error occurred');
-    } finally {
-      setLoading(false);
+    if (authError) {
+      toast.error(authError.message);
+      setLoading(false); 
+      return;
     }
-  };
+
+    toast.success('Login successful!');
+    navigate('/'); 
+  } catch (err) {
+    toast.error('Unexpected error: ', err);
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-100 px-4">
